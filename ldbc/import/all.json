@@ -1,13 +1,13 @@
-var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
+var base_dir = /data13/hbase/ldbc/social_network
 {
     "test-name": "import-ldbc-workload",
-    "graph-daemons": [{ "host": "192.168.8.205", "port": 4399}],
-    "user": "user",
-    "pass": "password",
+    "graph-daemons": [{ "host": "10.130.188.37", "port": 3699}],
+    "user": "nebula",
+    "pass": "nebula",
     "space": "ldbc_snb",
-    "rate": 160000,
-    "concurrent": 200,
-    "mysql-dsn": "root@/nb", // user:pass@ip:port/database
+    "rate": 320000,
+    "concurrent": 80,
+    "mysql-dsn": "",
     "workload": {
         "type": "joined",
         "list": [
@@ -18,7 +18,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 32,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT VERTEX person(first_name,last_name,gender,birthday,ip,browser) VALUES $LOOP$ $2$:(\"$3$\",\"$4$\",\"$5$\",\"$6$\",\"$7$\",\"$8$\")$END$"
+                "stmt-template": "INSERT VERTEX person(first_name,last_name,gender,birthday,ip,browser) VALUES $LOOP$ $1$:(\"$2$\",\"$3$\",\"$4$\",\"$5$\",\"$7$\",\"$8$\")$END$"
             }, {
                 "file": "${base_dir}/static/place.csv",
                 "type": "template",
@@ -58,7 +58,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 24,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT VERTEX post(time,image,ip,browser,language,content,length) VALUES $LOOP$ $2$:(\"$1$\",\"$3$\",\"$4$\",\"$5$\",\"$6$\", \"$7$\", $8$)$END$"
+                "stmt-template": "INSERT VERTEX post(time,image,ip,browser,language,content,length) VALUES $LOOP$ $1$:(\"$3$\",\"$2$\",\"$4$\",\"$5$\",\"$6$\", \"$7$\", $8$)$END$"
             }, {
                 "file": "${base_dir}/dynamic/comment.csv",
                 "type": "template",
@@ -66,7 +66,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 24,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT VERTEX comment(time,ip,browser,content,length) VALUES $LOOP$ $2$:(\"$1$\",\"$3$\",\"$4$\",\"$5$\", $6$)$END$"
+                "stmt-template": "INSERT VERTEX comment(time,ip,browser,content,length) VALUES $LOOP$ $1$:(\"$2$\",\"$3$\",\"$4$\",\"$5$\", $6$)$END$"
             }, {
                 "file": "${base_dir}/dynamic/forum.csv",
                 "type": "template",
@@ -74,7 +74,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "repeatable": false,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT VERTEX forum(time,title,type) VALUES $LOOP$ $2$:(\"$1$\",\"$3$\",\"$4$\")$END$"
+                "stmt-template": "INSERT VERTEX forum(time,title) VALUES $LOOP$ $1$:(\"$3$\",\"$2$\")$END$"
             }, {
                 "file": "${base_dir}/static/tag_hasType_tagclass.csv",
                 "type": "template",
@@ -98,7 +98,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE contains_post(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE contains_post() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/forum_hasTag_tag.csv",
                 "type": "template",
@@ -106,7 +106,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE forum_has_tag(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE forum_has_tag() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/forum_hasModerator_person.csv",
                 "type": "template",
@@ -114,7 +114,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE has_moderator(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE has_moderator() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/person_knows_person.csv",
                 "type": "template",
@@ -122,7 +122,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE knows(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE knows(time) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             }, {
                 "file": "${base_dir}/dynamic/comment_replyOf_comment.csv",
                 "type": "template",
@@ -130,7 +130,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE is_reply_of_comment(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE is_reply_of_comment() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/comment_replyOf_post.csv",
                 "type": "template",
@@ -138,7 +138,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE is_reply_of_post(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE is_reply_of_post() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/person_studyAt_organisation.csv",
                 "type": "template",
@@ -146,7 +146,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE study_at(year) VALUES $LOOP$ $2$ -> $3$:(\"$4$\")$END$"
+                "stmt-template": "INSERT EDGE study_at(year) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             },{
                 "file": "${base_dir}/dynamic/person_isLocatedIn_place.csv",
                 "type": "template",
@@ -154,7 +154,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE person_is_located_in() VALUES $LOOP$ $2$ -> $3$:()$END$"
+                "stmt-template": "INSERT EDGE person_is_located_in() VALUES $LOOP$ $1$ -> $2$:()$END$"
             },{
                 "file": "${base_dir}/dynamic/comment_isLocatedIn_place.csv",
                 "type": "template",
@@ -162,7 +162,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE comment_is_located_in() VALUES $LOOP$ $2$ -> $3$:()$END$"
+                "stmt-template": "INSERT EDGE comment_is_located_in() VALUES $LOOP$ $1$ -> $2$:()$END$"
             },{
                 "file": "${base_dir}/static/organisation_isLocatedIn_place.csv",
                 "type": "template",
@@ -178,7 +178,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE post_is_located_in() VALUES $LOOP$ $2$ -> $3$:()$END$"
+                "stmt-template": "INSERT EDGE post_is_located_in() VALUES $LOOP$ $1$ -> $2$:()$END$"
             },{
                 "file": "${base_dir}/static/place_isPartOf_place.csv",
                 "type": "template",
@@ -194,7 +194,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE comment_has_tag(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE comment_has_tag() VALUES $LOOP$ $1$ -> $2$:()$END$"
             },{
                 "file": "${base_dir}/dynamic/post_hasTag_tag.csv",
                 "type": "template",
@@ -202,7 +202,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE post_has_tag(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE post_has_tag() VALUES $LOOP$ $1$ -> $2$:()$END$"
             },{
                 "file": "${base_dir}/dynamic/person_hasInterest_tag.csv",
                 "type": "template",
@@ -210,7 +210,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE person_has_tag(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE person_has_tag() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/person_workAt_organisation.csv",
                 "type": "template",
@@ -218,7 +218,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE work_at(year) VALUES $LOOP$ $2$ -> $3$:(\"$4$\")$END$"
+                "stmt-template": "INSERT EDGE work_at(year) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             }, {
                 "file": "${base_dir}/dynamic/comment_hasCreator_person.csv",
                 "type": "template",
@@ -226,7 +226,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE has_comment(time) VALUES $LOOP$ $3$ -> $2$:(\"$1$\") $END$"
+                "stmt-template": "INSERT EDGE has_comment() VALUES $LOOP$ $1$ -> $2$:() $END$"
             }, {
                 "file": "${base_dir}/dynamic/post_hasCreator_person.csv",
                 "type": "template",
@@ -234,7 +234,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE has_post(time) VALUES $LOOP$ $3$ -> $2$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE has_post() VALUES $LOOP$ $1$ -> $2$:()$END$"
             }, {
                 "file": "${base_dir}/dynamic/person_likes_comment.csv",
                 "type": "template",
@@ -242,7 +242,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE likes_comment(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE likes_comment(time) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             }, {
                 "file": "${base_dir}/dynamic/person_likes_post.csv",
                 "type": "template",
@@ -250,7 +250,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "batch-count": 48,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE likes_post(time) VALUES $LOOP$ $2$ -> $3$:(\"$1$\")$END$"
+                "stmt-template": "INSERT EDGE likes_post(time) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             }, {
                 "file": "${base_dir}/dynamic/forum_hasMember_person.csv",
                 "type": "template",
@@ -258,7 +258,7 @@ var base_dir = /old-home/dutor.hou/Wdir/ldbc_snb_datagen/snb/sf1000
                 "repeatable": false,
                 "csv-separator": "|",
                 "csv-skip-header": 1,
-                "stmt-template": "INSERT EDGE has_member(time, type) VALUES $LOOP$ $2$ -> $3$:(\"$1$\", \"$4$\")$END$"
+                "stmt-template": "INSERT EDGE has_member(time) VALUES $LOOP$ $1$ -> $2$:(\"$3$\")$END$"
             }
         ]
     }

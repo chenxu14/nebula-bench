@@ -1,0 +1,45 @@
+Go代理设置
+https://goproxy.io/zh/
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.io,direct
+
+参考资料
+https://nebula-graph.io/posts/nebula-graph-1.0-benchmark-report/#data-source
+
+schema创建
+CREATE SPACE IF NOT EXISTS ldbc_snb(PARTITION_NUM = 24)
+
+USE ldbc_snb
+
+CREATE TAG IF NOT EXISTS person(first_name string, last_name string, gender string, birthday string, ip string, browser string)
+CREATE TAG IF NOT EXISTS place(name string, type string, url string)
+CREATE TAG IF NOT EXISTS organization(name string, type string, url string)
+CREATE TAG IF NOT EXISTS post(time string, image string, ip string, browser string, language string, content string, length int)
+CREATE TAG IF NOT EXISTS comment(time string, ip string, browser string, content string, length int)
+CREATE TAG IF NOT EXISTS forum(time string, title string)
+CREATE TAG IF NOT EXISTS hashtag(name string, url string)
+CREATE TAG IF NOT EXISTS tagclass(name string, url string)
+
+CREATE EDGE IF NOT EXISTS knows(time string)
+CREATE EDGE IF NOT EXISTS is_part_of()
+CREATE EDGE IF NOT EXISTS person_is_located_in()
+CREATE EDGE IF NOT EXISTS post_is_located_in()
+CREATE EDGE IF NOT EXISTS comment_is_located_in()
+CREATE EDGE IF NOT EXISTS org_is_located_in()
+CREATE EDGE IF NOT EXISTS forum_has_tag()
+CREATE EDGE IF NOT EXISTS comment_has_tag()
+CREATE EDGE IF NOT EXISTS post_has_tag()
+CREATE EDGE IF NOT EXISTS person_has_tag()
+CREATE EDGE IF NOT EXISTS study_at(year string)
+CREATE EDGE IF NOT EXISTS work_at(year string)
+CREATE EDGE IF NOT EXISTS has_post()
+CREATE EDGE IF NOT EXISTS has_comment()
+CREATE EDGE IF NOT EXISTS likes_post(time string)
+CREATE EDGE IF NOT EXISTS likes_comment(time string)
+CREATE EDGE IF NOT EXISTS is_reply_of_post()
+CREATE EDGE IF NOT EXISTS is_reply_of_comment()
+CREATE EDGE IF NOT EXISTS has_member(time string)
+CREATE EDGE IF NOT EXISTS contains_post()
+CREATE EDGE IF NOT EXISTS has_moderator()
+CREATE EDGE IF NOT EXISTS is_tagclass()
+CREATE EDGE IF NOT EXISTS is_sub_of_tagclass()
